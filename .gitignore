@@ -1,0 +1,11 @@
+.venv/
+.deps/
+.env
+__pycache__/
+*.py[cod]
+*.sqlite3
+.coverage
+htmlcov/
+staticfiles/
+.idea/
+.vscode/
