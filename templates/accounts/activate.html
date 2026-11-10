@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Подтвердите электронную почту</h1>
+<form class="panel form" method="post">{% csrf_token %}
+<p>Подтвердите адрес, чтобы войти в Почтовое бюро.</p><button>Подтвердить адрес</button>
+</form>
+{% endblock %}

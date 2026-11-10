@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}{{ section_title }} · Почтовое бюро{% endblock %}
+{% block content %}
+<div class="heading"><h1>{{ section_title }}</h1><a class="button" href="{% url create_url %}">{{ create_title }}</a></div>
+{% if object_list %}
+<div class="table-wrap"><table>
+<thead><tr>
+  <th scope="col">{% if kind == 'recipient' %}Имя{% else %}Тема{% endif %}</th>
+  {% if kind == 'recipient' %}<th scope="col">Email</th>{% endif %}
+  {% if kind == 'mailing' %}<th scope="col">Окно отправки</th><th scope="col">Статус</th>{% endif %}
+  {% if user.is_manager and kind != 'message' %}<th scope="col">Владелец</th>{% endif %}
+</tr></thead>
+<tbody>{% for item in object_list %}<tr>
+  <th scope="row"><a href="{% url detail_url item.pk %}">{% if kind == 'recipient' %}{{ item.full_name }}{% else %}{{ item }}{% endif %}</a></th>
+  {% if kind == 'recipient' %}<td>{{ item.email }}</td>{% endif %}
+  {% if kind == 'mailing' %}<td>{{ item.start_time|date:"d.m.Y H:i" }} — {{ item.end_time|date:"d.m.Y H:i" }}</td><td>
+    <span class="tag {{ item.status }}">{{ item.get_status_display }}</span>
+    {% if item.is_disabled %}<span class="tag failure">Отключена</span>{% endif %}
+  </td>{% endif %}
+  {% if user.is_manager and kind != 'message' %}<td>{{ item.owner.username }}</td>{% endif %}
+</tr>{% endfor %}</tbody>
+</table></div>
+{% if is_paginated %}
+<nav class="pager" aria-label="Страницы списка">
+{% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Предыдущая</a>{% endif %}
+<span>{{ page_obj.number }} из {{ paginator.num_pages }}</span>
+{% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Следующая</a>{% endif %}
+</nav>
+{% endif %}
+{% else %}
+<p class="panel">Пока здесь пусто. Добавьте первую запись, чтобы начать.</p>
+{% endif %}
+{% endblock %}

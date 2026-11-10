@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Пользователи</h1>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Логин</th><th scope="col">Email</th><th scope="col">Статус</th><th scope="col">Действие</th></tr></thead>
+<tbody>{% for account in accounts %}<tr>
+<th scope="row">{{ account.username }}</th><td>{{ account.email }}</td>
+<td>{% if account.is_active %}Активен{% elif account.email_confirmed %}Заблокирован{% else %}Ожидает подтверждения{% endif %}</td>
+<td>{% if account.is_active and account.email_confirmed and not account.is_manager and not account.is_staff and account.pk != user.pk %}
+<form method="post" action="{% url 'user-block' account.pk %}">{% csrf_token %}<button class="secondary danger">Заблокировать</button></form>
+{% endif %}</td>
+</tr>{% endfor %}</tbody>
+</table></div>
+{% endblock %}

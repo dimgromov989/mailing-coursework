@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Войти</h1>
+<form class="panel form" method="post">{% csrf_token %}{{ form.as_p }}
+{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+<div class="actions"><button>Войти</button><a href="{% url 'password_reset' %}">Забыли пароль?</a></div>
+</form>
+<p>Нет аккаунта? <a href="{% url 'signup' %}">Зарегистрироваться</a></p>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="hero">
+  <div>
+    <h1>Рассылки<br>в одном месте</h1>
+    <p>Подготовьте письмо, выберите получателей и отправьте его в назначенный период. Результат каждого письма сохранится в журнале.</p>
+    {% if user.is_authenticated %}<a class="button" href="{% url 'mailing-list' %}">Открыть рассылки</a>
+    {% else %}<a class="button" href="{% url 'signup' %}">Создать аккаунт</a>{% endif %}
+  </div>
+  <aside class="dispatch">
+    <span class="postmark" aria-hidden="true">✉</span>
+    <h2>Сводка сервиса</h2>
+    <dl class="totals">
+      <div><dt>Всего рассылок</dt><dd>{{ overview.mailings }}</dd></div>
+      <div><dt>Активные рассылки</dt><dd>{{ overview.active }}</dd></div>
+      <div><dt>Уникальные получатели</dt><dd>{{ overview.recipients }}</dd></div>
+    </dl>
+  </aside>
+</section>
+{% endblock %}
