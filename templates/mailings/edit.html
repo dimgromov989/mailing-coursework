@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<a class="back" href="{% url list_url %}">← {{ section_title }}</a>
+<h1>{% if object %}Редактирование{% else %}{{ create_title }}{% endif %}</h1>
+{% if kind == 'mailing' %}
+<p>Чтобы составить рассылку, добавьте <a href="{% url 'message-create' %}">письмо</a> и <a href="{% url 'recipient-create' %}">получателей</a>. Время указывается по часовому поясу сервиса.</p>
+{% endif %}
+<form class="panel form" method="post">{% csrf_token %}{{ form.as_p }}
+<div class="actions"><button>Сохранить</button><a href="{% url list_url %}">Отмена</a></div>
+</form>
+{% endblock %}

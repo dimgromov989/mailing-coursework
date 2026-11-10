@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}{{ object }} · Почтовое бюро{% endblock %}
+{% block content %}
+<a class="back" href="{% url list_url %}">← {{ section_title }}</a>
+<h1>{% if kind == 'recipient' %}{{ object.full_name }}{% else %}{{ object }}{% endif %}</h1>
+{% if kind == 'mailing' %}
+<p><span class="tag {{ object.status }}">{{ object.get_status_display }}</span>
+{% if object.is_disabled %}<span class="tag failure">Отключена менеджером</span>{% endif %}</p>
+<div class="panel">
+<dl class="details">
+<div><dt>Начало</dt><dd>{{ object.start_time|date:"d.m.Y H:i:s" }}</dd></div>
+<div><dt>Окончание</dt><dd>{{ object.end_time|date:"d.m.Y H:i:s" }}</dd></div>
+<div><dt>Владелец</dt><dd>{{ object.owner.username }}</dd></div>
+</dl>
+<h2>Получатели</h2>
+<ul>{% for recipient in recipients %}<li>{{ recipient.full_name }} · {{ recipient.email }}</li>{% empty %}<li>Нет получателей.</li>{% endfor %}</ul>
+</div>
+{% elif kind == 'recipient' %}
+<div class="panel"><p><strong>Email:</strong> {{ object.email }}</p><div class="prose">{{ object.comment|linebreaks }}</div></div>
+{% else %}
+<div class="panel prose">{{ object.body|linebreaks }}</div>
+{% endif %}
+<div class="actions">
+{% if object.owner_id == user.id %}
+  {% if kind == 'mailing' and not object.is_disabled %}
+  <form method="post" action="{% url 'mailing-send' object.pk %}">{% csrf_token %}<button>Отправить письма</button></form>
+  {% endif %}
+  <a class="button secondary" href="{% url update_url object.pk %}">Редактировать</a>
+  <a class="button secondary danger" href="{% url delete_url object.pk %}">Удалить</a>
+{% endif %}
+{% if kind == 'mailing' and user.is_manager and not object.is_disabled %}
+<form method="post" action="{% url 'mailing-disable' object.pk %}">{% csrf_token %}<button class="secondary danger">Отключить рассылку</button></form>
+{% endif %}
+</div>
+{% if kind == 'mailing' %}
+<section class="history">
+<h2>Последние 30 попыток</h2>
+{% if attempts %}<div class="table-wrap"><table>
+<thead><tr><th scope="col">Когда</th><th scope="col">Получатель</th><th scope="col">Результат</th><th scope="col">Ответ</th></tr></thead>
+<tbody>{% for attempt in attempts %}<tr>
+<td>{{ attempt.attempt_time|date:"d.m.Y H:i:s" }}</td><td>{{ attempt.recipient_email }}</td>
+<td><span class="tag {{ attempt.status }}">{{ attempt.get_status_display }}</span></td><td>{{ attempt.server_response }}</td>
+</tr>{% endfor %}</tbody>
+</table></div>{% else %}<p>Отправок пока не было.</p>{% endif %}
+</section>
+{% endif %}
+{% endblock %}

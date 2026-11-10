@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<a class="back" href="{% url detail_url object.pk %}">← К записи</a>
+<h1>Удалить запись?</h1>
+<form class="panel form" method="post">{% csrf_token %}
+<p>Будет удалена запись «{{ object }}». {% if kind == 'mailing' %}Журнал попыток этой рассылки тоже будет удалён.{% endif %}</p>
+<div class="actions"><button class="destructive">Удалить</button><a href="{% url detail_url object.pk %}">Отмена</a></div>
+</form>
+{% endblock %}

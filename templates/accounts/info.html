@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ title }}</h1>
+<p>{{ detail }}</p>
+<a class="back" href="{% url 'home' %}">← На главную</a>
+{% endblock %}

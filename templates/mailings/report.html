@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Мой отчёт</h1>
+<p>Результаты по вашим рассылкам. Каждому письму соответствует одна попытка.</p>
+<div class="panel"><dl class="totals">
+<div><dt>Всего попыток</dt><dd>{{ report.attempts }}</dd></div>
+<div><dt>Успешные попытки</dt><dd>{{ report.successful }}</dd></div>
+<div><dt>Неуспешные попытки</dt><dd>{{ report.failed }}</dd></div>
+<div><dt>Отправлено писем</dt><dd>{{ report.sent }}</dd></div>
+</dl></div>
+{% endblock %}

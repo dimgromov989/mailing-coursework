@@ -1,0 +1,34 @@
+{% load static %}<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Почтовое бюро{% endblock %}</title>
+<link rel="stylesheet" href="{% static 'postbox.css' %}">
+</head>
+<body>
+<header class="mast">
+  <div class="shell top">
+    <a class="brand" href="{% url 'home' %}"><span class="brand-icon" aria-hidden="true">✉</span> Почтовое бюро</a>
+    <nav aria-label="Главная навигация">
+    {% if user.is_authenticated %}
+      <a href="{% url 'mailing-list' %}">Рассылки</a>
+      <a href="{% url 'recipient-list' %}">Получатели</a>
+      <a href="{% url 'message-list' %}">Письма</a>
+      <a href="{% url 'report' %}">Отчёт</a>
+      {% if user.is_manager %}<a href="{% url 'user-list' %}">Пользователи</a>{% endif %}
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="quiet">Выйти</button></form>
+    {% else %}
+      <a href="{% url 'login' %}">Войти</a>
+      <a href="{% url 'signup' %}">Регистрация</a>
+    {% endif %}
+    </nav>
+  </div>
+</header>
+<main class="shell main" id="main">
+  {% for notice in messages %}<p role="status" class="notice {{ notice.tags }}">{{ notice }}</p>{% endfor %}
+  {% block content %}{% endblock %}
+</main>
+<footer class="shell foot">Почтовое бюро <span>Управление рассылками</span></footer>
+</body>
+</html>
